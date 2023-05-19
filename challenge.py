@@ -1,6 +1,6 @@
 from sage.all import EllipticCurve, GF
 import hashlib
-from Crypto.Cipher import AES
+from sage.crypto.block_cipher import AES
 from secret import FLAG
 from os import urandom
 

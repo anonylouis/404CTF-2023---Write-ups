@@ -1,0 +1,21 @@
+#!/bin/expect -f
+
+set timeout 3
+
+spawn nc challenges.404ctf.fr 30980
+
+expect ">> "
+send "cosette\n"
+expect ">> "
+send "ettesoc\n"
+expect ">> "
+send "ttsoc\n"
+expect ">> "
+send "ottsc\n"
+expect ">> "
+send "PPtt!15QRUWcos\n"
+expect ">> "
+set output [exec sh -c ./script.sh]
+send "$output\n"
+
+expect eof

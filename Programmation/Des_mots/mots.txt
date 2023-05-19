@@ -1,0 +1,43 @@
+spawn nc challenges.404ctf.fr 30980
+Commençons. Je te propose de démarrer en transformant mon nom.
+Tout d'abord retourne mon nom sans modifications.
+Règle 0 : Aucune modification
+Entrée : {cosette}
+>> cosette
+Je vois que tu as compris. La première règle de ce langage est très simple.
+Règle 1 : Inverser les lettres
+Entrée : {cosette}
+>> ettesoc
+Oui c'est bien. Maintenant la deuxième règle est un peu plus difficile.
+Règle 2 :
+- Si le mot à un nombre de lettres pair, échanger la 1ere et la 2e partie du mot obtenu
+- Sinon, enlever toutes les lettres du mot correspondant à la lettre centrale
+Entrée : {cosette}
+>> ttsoc
+Tu t'en sors très bien ! Continuons avec la troisième règle.
+Règle 3 :
+_Si le mot a 3 lettres ou plus_ :
+
+- Si la 3e lettre du mot obtenu est une consonne, "décaler" les voyelles vers la gauche dans le mot original, puis réappliquer les règles 1 et 2.
+- Sinon : la même chose mais les décaler vers la droite.
+
+> Ex de décalage : _poteau => petauo_ // _drapeau => drupaea_
+Entrée : {cosette}
+>> ottsc
+Nous avons presque fini, la quatrième règle est la plus complexe.
+Règle 4 :
+- Pour `n` allant de 0 à la fin du mot, si le caractère `c` à la position `n` du mot est une consonne (majuscule ou minuscule), insérer en position `n+1` le caractère de code ASCII `a = ((vp + s) % 95) + 32`, où `vp` est le code ASCII de la voyelle précédant la consonne `c` dans l'alphabet (si `c = 'F'`, `vp = 'E'`), et `s = SOMME{i=n-1 -> 0}(a{i}*2^(n-i)*Id(l{i} est une voyelle))`, où `a{i}` est le code ASCII de la `i`-ième lettre du mot, `Id(x)` vaut `1` si `x` est vrai, `0` sinon, et `l{i}` la `i`-ième lettre du mot. _Attention à bien appliquer cette règle aussi sur les caractères insérés au mot._
+
+> Ex : _futur => f&ut\ur@_
+
+- Enfin, trier le mot par ordre décroissant d'occurrences des caractères, puis par ordre croissant en code ASCII pour les égalités
+
+> Ex de tri : _patate => aattep_
+Entrée : {cosette}
+>> PPtt!15QRUWcos
+Bravo ! Maintenant je vais te donner un chapitre dont j'ai besoin de la traduction complète.
+Chaque mot est écrit en minuscule sans accents ni caractères spéciaux et sont séparés par un espace. Tu as 5 secondes pour répondre.
+Entrée : {cette histoire fantine societe achetant esclave misere froid isolement abandon denument marche douloureux morceau misere offre societe accepte sainte jesus christ gouverne notre civilisation penetre encore esclavage disparu civilisation europeenne erreur existe toujours femme appelle prostitution femme grace faiblesse beaute maternite moindres hontes homme point douloureux drame sommes arrives reste fantine autrefois devenue marbre devenant touche froid passe subit ignore figure deshonoree severe ordre social dernier arrive arrivera ressenti supporte eprouve souffert perdu pleure resignee cette resignation ressemble indifference comme ressemble sommeil evite craint tombe toute passe ocean importe eponge imbibee croit moins erreur imaginer epuise touche helas toutes destinees}
+>> ee;FNc 00ii2Eehorst nn>`aefio ee&7<cist aatt (*2C]cehn sssee3:NW_abcdfv ee06Eimrs PP"1EKTdfor *0>cilmnostvz{| aa&;FNbdo ddeenn+/6AINRmtu 66+0acehmr uuulloo6<LV_denrx{ gg)AQSabefkmnorsux ee06Eimrs PP1eor ee&7<cist cc!'4@CDWabpt ee4\ainstw AQSbefgjknsu 000"&chirst eeerr/6KLginouv PP!1enor iiiinn"(,;=>Qaclostv 000*nprt ee"*7chnor ee236;CFNcglsv{ dd+47airsu iiiinn"(,;=>Qaclostv eeeenn08<T]dkopru rrr00ee\u ee5BQRUirstxy oouu*+,=GTXdhjrst eeAJRf pppll.5:QRae ttt<<iioo"35OQRZ\nprsuz eeAJRf &+@GHacfgr eess4@EKOTabfhi ee$abtu~ eeeJJtt*+DYaimnw oovv*1cdeimnrs{| hh*,2GTX`enost ehior **0Dinpt uuulloo6<LV_denrx{ '.@CDabdmr mmss*<ANR`eo rr05:@QRaipsv ee<=rt nn>`aefio iirr%0?aefjost eeeANRY_dnv 66rr05abem 44eenn'1BCadltvy YYtt$cehou PP"1EKTdfor *Daep 0=istu &*7eghinor &+Refghiruwy eee%%FFoo'=Udhnrs eee6<=rsv PPrr1Ueo "*=DMPaciklos ddeerr +0iv 00rr,abeivz rrraa#+<`deiv 00eess(*D_inrt 00eepp5<QRorstu ,4?Cblopruvz ff&(CIegiorstu| .]depu eeIVW_dlnpru{ eee<<=CP]dghiknrs ee;FNc FFNNii~~7=aceghorst 000**ss"blmr eee&&ffiinn/46AGKLcdjrz{ cc5eno 000**ss"blmr *Ueilos 06itv cc)*DEQ^aimnrt BB#'beot tt \eu *Daep BB#*ceno *9CDSV\imopqrt{ ee<T]`dgknop bbii6CSV\mqru PPP01EGcort *0>imns rrr00ee\u ii%&>aegmnru ee<^ipsu YYtt$cehou 0:Baehs ttteeYiosu ss!0>CSV\adimnt
+Merci ! C'est exactement ce qu'il me fallait !
+Voici ta récompense : 404CTF{:T]cdeikm_)W_doprsu_nt_;adei}

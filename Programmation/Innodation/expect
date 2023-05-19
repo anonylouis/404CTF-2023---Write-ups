@@ -1,0 +1,18 @@
+#!/bin/expect -f
+
+set timeout 2
+
+exec echo '> ' >> innondation.txt
+
+spawn nc challenges.404ctf.fr 31420
+
+set NUM 1
+
+while { $NUM <= 100 } {
+	expect "> "
+	set output [exec sh -c ./single.sh]
+	set NUM [ expr $NUM + 1 ]
+	send "$output\n"
+}
+
+expect eof
