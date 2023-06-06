@@ -4,11 +4,7 @@ pragma solidity 0.8.18;
 interface Event {
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
+    event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
 contract Buttons is Event {
@@ -157,7 +153,7 @@ contract Buttons is Event {
         require(owner != address(0)  , "Approbation depuis l'adresse nulle impossible");
         require(spender != address(0), "Approbation vers l'adresse nulle impossible");
 
-        ty[owner][spender] = amount;
+        _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
     }
 

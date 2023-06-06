@@ -2,10 +2,13 @@
 
 import requests
 import json
+from web3 import Web3, HTTPProvider
 
 url = "https://blockchain.challenges.404ctf.fr/"
-contract_address = "0x8EBB17DA7cD297647DeA3033741154B216810305"
+contract_address = "0x6FC9c024E79b4F5306966e77C2Fdf21B470cddD2"
 chain_id = 31337
+
+w3 = Web3(HTTPProvider(url))
 
 def make_json_rpc_request(method, params=None):
     headers = {'Content-Type': 'application/json'}
@@ -18,7 +21,7 @@ def make_json_rpc_request(method, params=None):
     response = requests.post(url, headers=headers, data=json.dumps(payload))
     return response.json()
 
-#conskulter solde d un compte
+#consulter solde d un compte
 response = make_json_rpc_request("eth_call", [{
     "to": contract_address,
     "data": "0x70a08231"+"0x779f05969a12c992A91C1C096C29A17db1143F24"[2:].zfill(64),
@@ -28,11 +31,10 @@ response = make_json_rpc_request("eth_call", [{
 name = response["result"]
 print(name)
 
+
 response = make_json_rpc_request("eth_sendTransaction", [{
     "to": contract_address,
-    "data": "0x42966c68"+"f".zfill(64),
+    "data": "0xa9059cbb"+"0x779f05969a12c992A91C1C096C29A17db1143F24"[2:].zfill(64)+"0x1"[2:].zfill(64),
 }])
 
 print(response)
-
-# burn(uint256) = 42966c68

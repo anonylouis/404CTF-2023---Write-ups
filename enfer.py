@@ -7,7 +7,7 @@ import json
 
 url = "https://blockchain.challenges.404ctf.fr/"
 chain_id = 31337
-contract_address = "0x053012A242d8Bf0E4C008BFA44bf3768195F2284"
+contract_address = "0xA156AD8Efeb4a5708b3564d46eEED59d9AD9a94a"
 
 def make_json_rpc_request(method, params=None):
     headers = {'Content-Type': 'application/json'}
@@ -20,30 +20,20 @@ def make_json_rpc_request(method, params=None):
     response = requests.post(url, headers=headers, data=json.dumps(payload))
     return response.json()
 
-import hashlib
+import sha3
+sha3_hash = sha3.keccak_256("guess(uint256)".encode()).hexdigest()
+method_id = "0x"+sha3_hash[:8]
+print(method_id)
 
-def generate_function_selector(signature):
-    # Supprimez les espaces blancs et les types de données de la signature
-    signature = signature.replace(" ", "").split("(")[0]
 
-    # Calculez l'hash SHA3-256 de la signature
-    signature_hash = hashlib.sha3_256(signature.encode()).hexdigest()
-
-    # Prenez les 4 premiers octets de l'hash pour obtenir le sélecteur de fonction
-    function_selector = signature_hash[:8]
-
-    return "0x" + function_selector
-
-# Utilisez la signature de la fonction guess pour générer le sélecteur de fonction
-guess_signature = "guess(uint256)"
-guess_function_selector = generate_function_selector(guess_signature)
-print(guess_function_selector)
-
-# Exemple d'appel à la méthode "guess" avec l'adresse du contrat et les paramètres requis
-next_value = 42
 response = make_json_rpc_request("eth_sendTransaction", [{
     "to": contract_address,
-    "data": "0x52c84dce" + "000000000000000000000000000000000000000000000000000000000000002a",
+    "data": "0x9189fec1"+"000000000000000000000000000000000000000000000000000000004be26123",
     "chainId": hex(chain_id)
 }])
 print(response)
+
+from web3 import Web3, HTTPProvider
+w3 = Web3(HTTPProvider(url))
+storage = w3.eth.get_storage_at(contract_address, 4)
+print(storage.hex())

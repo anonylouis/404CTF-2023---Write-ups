@@ -1,30 +1,24 @@
-from sage.all import EllipticCurve, GF
 import hashlib
-from sage.crypto.block_cipher import AES
-from secret import FLAG
-from os import urandom
+from Crypto.Cipher import AES
 
+#data :
+G = [93808707311515764328749048019429156823177018815962831703088729905542530725, 144188081159786866301184058966215079553216226588404139826447829786378964579]
+H = [139273587750511132949199077353388298279458715287916158719683257616077625421, 30737261732951428402751520492138972590770609126561688808936331585804316784]
 p = 231933770389389338159753408142515592951889415487365399671635245679612352781
-a = 93808707311515764328749048019429156823177018815962831703088729905542530725
-b = 144188081159786866301184058966215079553216226588404139826447829786378964579
+iv = b'\x00\xb7\x82\x2a\x19\x6b\x00\x79\x50\x78\xb6\x9f\xcd\x91\x28\x0d'
+cipher = b'\x82\x33\xd0\x4a\x29\xbe\xfd\x2e\xfb\x93\x2b\x4d\xba\xc8\xd4\x18\x69\xe1\x3e\xcb\xa7\xe5\xf1\x3d\x48\x12\x8d\xdd\x74\xea\x0c\x70\x85\xb4\xff\x40\x23\x26\x87\x03\x13\xe2\xf1\xdf\xbc\x9d\xe3\xf9\x62\x25\xff\xbe\x58\xa8\x7e\x68\x76\x65\xb7\xd4\x5a\x41\xac\x22'
 
-determinant = 4 * a**3 + 27 * b**2
-assert determinant != 0
 
-E = EllipticCurve(GF(p), [a,b])
-G = E.random_point()
-H = E.random_point()
+eq1 = pow(G[1], 2) - pow(G[0], 3)
+eq2 = pow(H[1], 2) - pow(H[0], 3)
+s1 = eq2 - eq1
+s2 = H[0] - G[0]
+a = s1 * pow(s2, -1, p)
+b = (eq1 - (a * G[0]))
+a %= p
+b %= p
 
-print(G.xy()[0], G.xy()[1])
-print(H.xy()[0], H.xy()[1])
-print(p)
-
-iv = urandom(16)
 key = str(a) + str(b)
 aes = AES.new(hashlib.sha1(key.encode()).digest()[:16], AES.MODE_CBC, iv=iv)
-cipher = aes.encrypt(FLAG)
-print(cipher.hex())
-print(iv.hex())
 
-
-
+print("FLAG = ", aes.decrypt(cipher).decode())

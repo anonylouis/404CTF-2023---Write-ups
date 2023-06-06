@@ -64,27 +64,25 @@ AB[-1] -= AB[1]
 
 AB %= 26
 
-AB[-2] *= 25
-AB[-2] %= 26
-AB[0]  -= 25 * AB[-2]
-AB[1]  -= 2 * AB[-2]
-AB[2]  += AB[-2]
-AB[-2] -= AB[2]
+for i in range(2,16) :
+	AB[-i] *= 25
+	AB[-i] %= 26
+	AB[i-2]  -= 25 * AB[-i]
+	AB[i-1]  -= 2 * AB[-i]
+	AB[i] += AB[-i]
+	AB[-i] -= AB[i]
+	AB %= 26
 
+for j in range(1, 15) :
+	for i in range(j, 31-j) :
+		AB[i] -= AB[i][-j-1] * AB[-j]
+	AB %= 26
+
+AB[15] -= AB[16]
+AB[14] -= 25 * AB[16]
 AB %= 26
 
-AB[-3] *= 25
-AB[-3] %= 26
-AB[0]  -= 25 * AB[-2]
-AB[1]  -= 2 * AB[-2]
-AB[2]  += AB[-2]
-AB[-2] -= AB[2]
+X = AB[:, -1]
 
-
-
-
-print_matrix(AB)
-
-
-# X = np.linalg.solve(A, B)
-# print(X)
+for i in range(len(X)) :
+	print(alpha[int(X[i])], end="")
