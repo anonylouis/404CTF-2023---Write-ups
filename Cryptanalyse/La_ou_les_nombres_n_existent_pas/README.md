@@ -60,7 +60,7 @@ self.a = (self.a + self.d) % self.q
 self.k = (self.a * self.k + self.b) % self.q
 ```
 
-## Les mathematiques avec un grand M
+## Les Mathematiques avec un grand M
 
 Au total 4 inconnues : **a**, **b**, **k** et **sk**, et bien heureusement 4 equations avec nos 4 signatures :
 > Toutes les prochaines equations seront modulos q  
@@ -94,7 +94,7 @@ Je peux maintenant developper les equations 3 et 4  et remplacer le terme $a * s
  
 * Equation 3 :
 
-$$ (sk * C1 + b * C2 + a * C3) = C4 $$ 
+$$ sk * C_1 + b * C_2 + a * C_3 = C_4 $$ 
 
 ```python3
 # Equation 3
@@ -106,7 +106,7 @@ C4 = (m[2] * pow(s[2], -1, q) * pow(r[1], -1, q) * s[1] - decrypt_d * pow(r[1], 
 
 * Equation 4 :
 
-$$ (sk * C5 + b * C6 + a * C7) = C8 $$ 
+$$ sk * C_5 + b * C_6 + a * C_7 = C_8 $$ 
 
 ```python3
 C5 = (r[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) -  s[2] * pow(r[2], -1, q) * pow(s[3], -1, q) * r[3] + 2 * decrypt_d ) % q
@@ -117,5 +117,32 @@ C8 = (s[2] * pow(r[2], -1, q) * pow(s[3], -1, q) * m[3] - m[1] * pow(s[1], -1, q
 
 Arriver ici, on peut voir que eq1, eq3 et eq4 sont lineaires et impossible de lineariser eq2, j'ai beau retourner le probleme comme je veux je tourne en boucle j'ai donc continuer sans lineariser eq2 :
 
-Avec eq3 et eq4 je peux exprimer a et b en fonction de sk !
+Avec eq3 et eq4 je peux exprimer a et b en fonction de sk, et avec eq1 je peux exprimer k en fonction de sk :
 
+$$ b = E_1 - E_2 * sk $$
+
+$$ a = F_1 - F_2 * sk $$
+
+$$ k = G_1 + G_2 * sk $$
+
+> Les valeurs de E1, E2, F1, F2, G1, G2 sont trouvable dans *solve.py*
+
+On insere alors tout dans eq2 afin d'avoir une grosse equation en fonction de sk :
+
+$$ s_2 * (a * k + b)  - sk * r_2 = m_2 $$  
+
+$$ s_2 * ((F_1 - F_2 * sk) * (G_1 + G_2 * sk) + E_1 - E_2 * sk)  - sk * r_2 = m_2 $$  
+
+$$ (F_2 * G_2) * sk^{2} + (F_2 * G_1 - F_1 * G_2 + E_2 + r_2 * s_2^{-1}) * sk + (m_2 * s_2^{-1} - F_1 * G_1 - E_1) = 0 $$  
+
+## Plus qu'a resoudre
+
+Voici la meilleur equation que l'on puisse obtenir, encore faut il la resoudre !!  
+> Attention l'equation etant modulo **q** ce n'est pas une simple equation du second degre  
+
+Google nous parle de ***quadratic congruence***  
+Et l'on peut trouver un solver python facilement sur [github](https://github.com/panoti/CH_QuadraticCongruenceSolver)
+
+On l'appelle pour trouver **sk** et on affiche **flag**
+
+>404CTF{N_0ub1ie_j4m415_C3lu1_qu1_cr017_5@v0ir_n'4ppr3nd_plu5.}
