@@ -1,12 +1,13 @@
-Voici le challenge extreme de ce CTF  
+# Là où les nombres n'existent pas
 
-Pour ce challenge de Cryptanalyse on nous fournit un code python *challenge.py* et un fichier *data.txt*, output du script precedent.  
+Cette année, on s'attaque au challenge extrême de Cryptanalyse !
+On nous fournit un code python challenge.py et un fichier data.txt, output du script précédent.   
 
-Pas de mystere : Il faut se servir de l'output pour remonter au flag.  
+***Pas de mystère : Il faut se servir de l'output pour remonter au flag.***
 
 ## Comprendre challenge.py
 
-Commencons par la fonction qui nous interesse :
+Commençons par la fonction qui nous intéresse :
 
 ```python3
 def encrypt_flag(self, flag):
@@ -17,7 +18,7 @@ def encrypt_flag(self, flag):
     return ciphertext.hex(), iv.hex()
 ```
 
-*data.txt* nous donne le resultat de cette fonction, on peut donc naivement tenter de reverse la fonction donnee :
+data.txt nous donne le résultat de cette fonction, on peut donc naïvement tenter de reverse la fonction donnée :
 ```python3
 def decrypt_flag(cipher, iv, sk):
     key = sha256(sk).digest()[:16]
@@ -25,36 +26,36 @@ def decrypt_flag(cipher, iv, sk):
     flag = unpad(aes.decrypt(cipher), 16)
     print(flag)
 ```
-Et ca marche ! ... Enfin localement... en ayant *sk*... Bon Bah plus qu'a obtenir la variable sk !  
+Et ça marche ! ... Enfin localement... en ayant sk... Bon, bah plus qu'à obtenir la variable sk !  
 
-Et pour l'avoir il faut regarder les autres datas donnees qui constituent un set de messages / signatures.
+Et pour l'avoir, il faut regarder les autres données constituant un set de messages / signatures.
 
-* Les messages sont obtenues par :
-    ```python3
-    messages = [pow(C.d, i, q) for i in range(1, 5)]
-    ```
-    On peut donc retenir que la valeur de **C.d** peut etre facilement retrouvee avec messages[0] !
+Les messages sont obtenus par :
+```python3
+messages = [pow(C.d, i, q) for i in range(1, 5)]
+```
+On peut donc retenir que la valeur de **C.d** peut etre facilement retrouvee avec messages[0] !
 
-* Les signatures sont obtenues par :
-    ```python3
-    def sign(self, m):
-      self.get_next_nonce()
-      assert self.q > m > 0
-      P = self.k * self.G
-      r = P.x
-      assert r > 0
-      s = (pow(self.k, -1, self.q) * (m + self.sk * r)) % self.q
-      assert s > 0
-      return r, s
-    ```
-    Pour retrouver sk on doit donc resoudre :
-    $$s \equiv k^{-1} * (m + sk * r) \[q]  $$
-    $$sk \equiv (k * s - m ) * r^{-1} \[q] $$
-    Les valeurs de r et s sont obtenues dans ***data.txt***, la valeur de q est une    constante donnee par `q = P521.q`, mais k est inconnue !!
- /home/anonylouis/404CTF-2023---Write-ups/Cryptanalyse/La_ou_les_nombres_n_existent_pas/solve.py
-Je resume : Pour trouver **flag** il nous faut **key**, pour trouver **key** il nous faut **sk**, pour trouver **sk** il nous **k** !
+Les signatures sont obtenues par :
+```python3
+def sign(self, m):
+  self.get_next_nonce()
+  assert self.q > m > 0
+  P = self.k * self.G
+  r = P.x
+  assert r > 0
+  s = (pow(self.k, -1, self.q) * (m + self.sk * r)) % self.q
+  assert s > 0
+  return r, s
+```
+Pour retrouver sk, on doit donc résoudre :
+$$s \equiv k^{-1} * (m + sk * r) \[q]  $$
+$$sk \equiv (k * s - m ) * r^{-1} \[q] $$
+Les valeurs de r et s sont obtenues dans ***data.txt***, la valeur de q est une constante donnée par `q = P521.q`, mais k est inconnue !!
 
-Les valeurs de k et a changent au debut de chaque generation de signature selon la formule :
+Je résume : Pour trouver **flag** il nous faut **key**, pour trouver **key** il nous faut **sk**, pour trouver **sk** il nous faut **k** !
+
+Les valeurs de k et a changent au début de chaque génération de signature selon la formule :
 ```python3
 self.a = (self.a + self.d) % self.q
 self.k = (self.a * self.k + self.b) % self.q
@@ -62,7 +63,7 @@ self.k = (self.a * self.k + self.b) % self.q
 
 ## Les Mathematiques avec un grand M
 
-Au total 4 inconnues : **a**, **b**, **k** et **sk**, et bien heureusement 4 equations avec nos 4 signatures :
+Au total 4 inconnues : **a**, **b**, **k** et **sk**, et bien heureusement 4 équations avec nos 4 signatures :
 > Toutes les prochaines equations seront modulos q  
 > Je note ($m_1$, $s_1$, $r_1$) ... ($m_4$, $s_4$, $r_4$), les 4 couples de valeurs messages/signatures
 
@@ -74,9 +75,9 @@ $$ s_3 * ((a + d) * (a * k + b)) + b)  - sk * r_3 = m_3 $$
 
 $$ s_4 * ((a + 2d) * ((a + d) * (a * k + b)) + b))  - sk * r_4 = m_4 $$  
 
-Ca fait peur ? normal  
+Ça fait peur ? Normal
 
-Bon maintenant il faut simplifier ces equations pour tenter d'obtenir 4 equations lineaires et obtenir un systeme simple a resoudre !
+Bon, maintenant il faut simplifier ces équations pour tenter d'obtenir 4 équations linéaires et obtenir un système simple à résoudre !
 
 Avec eq2 et eq3, on a :
 
@@ -98,10 +99,10 @@ $$ sk * C_1 + b * C_2 + a * C_3 = C_4 $$
 
 ```python3
 # Equation 3
-C1 = (r[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) - r[2] * pow(s[2], -1, q) * pow(r[1], -1, q) * s[1] + decrypt_d) % q
+C1 = (r[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) - r[2] * pow(s[2], -1, q) * pow(r[1], -1, q) * s[1] + d) % q
 C2 = (pow(r[1], -1, q) * s[1] - s[0] * pow(r[0], -1, q)) % q
 C3 = (m[1] * pow(r[1], -1, q) - m[0] * pow(r[0], -1, q)) % q
-C4 = (m[2] * pow(s[2], -1, q) * pow(r[1], -1, q) * s[1] - decrypt_d * pow(r[1], -1, q) * m[1] - m[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q)) % q
+C4 = (m[2] * pow(s[2], -1, q) * pow(r[1], -1, q) * s[1] - d * pow(r[1], -1, q) * m[1] - m[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q)) % q
 ```
 
 * Equation 4 :
@@ -109,15 +110,16 @@ C4 = (m[2] * pow(s[2], -1, q) * pow(r[1], -1, q) * s[1] - decrypt_d * pow(r[1], 
 $$ sk * C_5 + b * C_6 + a * C_7 = C_8 $$ 
 
 ```python3
-C5 = (r[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) -  s[2] * pow(r[2], -1, q) * pow(s[3], -1, q) * r[3] + 2 * decrypt_d ) % q
+C5 = (r[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) -  s[2] * pow(r[2], -1, q) * pow(s[3], -1, q) * r[3] + 2 * d ) % q
 C6 = (s[2] * pow(r[2], -1, q) - s[0] * pow(r[0], -1, q) ) % q
 C7 = (pow(r[2], -1, q) * m[2] - m[0] * pow(r[0], -1, q) ) % q
-C8 = (s[2] * pow(r[2], -1, q) * pow(s[3], -1, q) * m[3] - m[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) - 2 * decrypt_d * pow(r[2], -1, q) * m[2] ) % q
+C8 = (s[2] * pow(r[2], -1, q) * pow(s[3], -1, q) * m[3] - m[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) - 2 * d * pow(r[2], -1, q) * m[2] ) % q
 ```
 
-Arriver ici, on peut voir que eq1, eq3 et eq4 sont lineaires et impossible de lineariser eq2, j'ai beau retourner le probleme comme je veux je tourne en boucle j'ai donc continuer sans lineariser eq2 :
+Arriver ici, on peut voir que eq1, eq3 et eq4 sont lineaires et impossible de lineariser eq2, j'ai beau retourner le probleme comme je veux je tourne en boucle !!  
+J'ai donc continuer sans lineariser eq2 :
 
-Avec eq3 et eq4 je peux exprimer a et b en fonction de sk, et avec eq1 je peux exprimer k en fonction de sk :
+Avec eq3 et eq4 on exprime a et b en fonction de sk, et avec eq1 on peut exprimer k en fonction de sk :
 
 $$ b = E_1 - E_2 * sk $$
 
@@ -138,11 +140,11 @@ $$ (F_2 * G_2) * sk^{2} + (F_2 * G_1 - F_1 * G_2 + E_2 + r_2 * s_2^{-1}) * sk + 
 ## Plus qu'a resoudre
 
 Voici la meilleur equation que l'on puisse obtenir, encore faut il la resoudre !!  
-> Attention l'equation etant modulo **q** ce n'est pas une simple equation du second degre  
+***Attention*** l'equation etant modulo **q** ce n'est pas une simple equation du second degre  
 
 Google nous parle de ***quadratic congruence***  
 Et l'on peut trouver un solver python facilement sur [github](https://github.com/panoti/CH_QuadraticCongruenceSolver)
 
-On l'appelle pour trouver **sk** et on affiche **flag**
+On l'appelle pour trouver **sk**, et on affiche **flag**
 
 >404CTF{N_0ub1ie_j4m415_C3lu1_qu1_cr017_5@v0ir_n'4ppr3nd_plu5.}
