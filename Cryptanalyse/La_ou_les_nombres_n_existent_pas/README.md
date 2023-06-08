@@ -1,6 +1,9 @@
 # Là où les nombres n'existent pas
 
 Cette année, on s'attaque au challenge extrême de Cryptanalyse !  
+
+![Ennonce](https://github.com/anonylouis/404CTF-2023---Write-ups/blob/main/.images/CryptoExtremeChallenge.png)
+
 On nous fournit un code python challenge.py et un fichier data.txt, output du script précédent.   
 
 ***Pas de mystère : Il faut se servir de l'output pour remonter au flag.***
@@ -147,4 +150,6 @@ Et l'on peut trouver un solver python facilement sur [github](https://github.com
 
 2 solutions a cette equation : L'une d'elle permet de trouver **sk** et d'afficher **flag**
 
->404CTF{N_0ub1ie_j4m415_C3lu1_qu1_cr017_5@v0ir_n'4ppr3nd_plu5.}
+<p align="center">
+  <img src="https://github.com/anonylouis/404CTF-2023---Write-ups/blob/main/.images/CryptoExtremeFlag.png" />
+</p>
