@@ -94,7 +94,7 @@ Je peux egalement exprimer le terme $a * sk$ lineairement en fonction de a, sk e
 
 $$ a * sk = sk * r_2 * s_2^{-1}  * s_1 * r_1^{-1} + m_2 * s_2^{-1} * s_1 * r_1^{-1} - a * m_1* r_1^{-1} - b  * s_1 * r_1^{-1}$$  
 
-Je peux maintenant developper les equations 3 et 4  et remplacer le terme $a * sk$ par sa valeur afin d'obtenir des equations lineaires !
+Je peux maintenant developper les équations 3 et 4  et remplacer le terme $a * sk$ par sa valeur afin d'obtenir des équations linéaires !
  
 * Equation 3 :
 
@@ -119,8 +119,8 @@ C7 = (pow(r[2], -1, q) * m[2] - m[0] * pow(r[0], -1, q) ) % q
 C8 = (s[2] * pow(r[2], -1, q) * pow(s[3], -1, q) * m[3] - m[1] * pow(s[1], -1, q) * s[0] * pow(r[0], -1, q) - 2 * d * pow(r[2], -1, q) * m[2] ) % q
 ```
 
-Arriver ici, on peut voir que eq1, eq3 et eq4 sont lineaires et impossible de lineariser eq2, j'ai beau retourner le probleme comme je veux je tourne en boucle !!  
-J'ai donc continuer sans lineariser eq2 :
+Arriver ici, on peut voir que eq1, eq3 et eq4 sont linéaires, et apres mure reflexion je n'ai pas reussi a rendre eq2 linéaire... 
+J'ai donc continuer sans linéariser eq2 :
 
 Avec eq3 et eq4 on exprime a et b en fonction de sk, et avec eq1 on peut exprimer k en fonction de sk :
 
@@ -132,7 +132,7 @@ $$ k = G_1 + G_2 * sk $$
 
 > Les valeurs de E1, E2, F1, F2, G1, G2 sont trouvable dans *solve.py*
 
-On insere alors tout dans eq2 afin d'avoir une grosse equation en fonction de sk :
+On insere alors tout dans eq2 afin d'avoir une grosse équation en fonction de sk :
 
 $$ s_2 * (a * k + b)  - sk * r_2 = m_2 $$  
 
@@ -140,15 +140,15 @@ $$ s_2 * ((F_1 - F_2 * sk) * (G_1 + G_2 * sk) + E_1 - E_2 * sk)  - sk * r_2 = m_
 
 $$ (F_2 * G_2) * sk^{2} + (F_2 * G_1 - F_1 * G_2 + E_2 + r_2 * s_2^{-1}) * sk + (m_2 * s_2^{-1} - F_1 * G_1 - E_1) = 0 $$  
 
-## Plus qu'a resoudre
+## Plus qu'à résoudre
 
-Voici la meilleur equation que l'on puisse obtenir, encore faut il la resoudre !!  
-***Attention*** l'equation etant modulo **q** ce n'est pas une simple equation du second degre  
+Voici la meilleur equation que l'on puisse obtenir, encore faut il la réesoudre !!  
+***Attention*** l'équation etant modulo **q** ce n'est pas une simple équation du second degre  
 
 Google nous parle de ***quadratic congruence***  
 Et l'on peut trouver un solver python facilement sur [github](https://github.com/panoti/CH_QuadraticCongruenceSolver)
 
-2 solutions a cette equation : L'une d'elle permet de trouver **sk** et d'afficher **flag**
+2 solutions a cette équation : L'une d'elle permet de trouver **sk** et d'afficher **flag**
 
 <p align="center">
   <img src="https://github.com/anonylouis/404CTF-2023---Write-ups/blob/main/.images/CryptoExtremeFlag.png" />
