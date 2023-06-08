@@ -1,6 +1,6 @@
 # Là où les nombres n'existent pas
 
-Cette année, on s'attaque au challenge extrême de Cryptanalyse !
+Cette année, on s'attaque au challenge extrême de Cryptanalyse !  
 On nous fournit un code python challenge.py et un fichier data.txt, output du script précédent.   
 
 ***Pas de mystère : Il faut se servir de l'output pour remonter au flag.***
@@ -55,7 +55,7 @@ Les valeurs de r et s sont obtenues dans ***data.txt***, la valeur de q est une 
 
 Je résume : Pour trouver **flag** il nous faut **key**, pour trouver **key** il nous faut **sk**, pour trouver **sk** il nous faut **k** !
 
-Les valeurs de k et a changent au début de chaque génération de signature selon la formule :
+Les valeurs de **k** et **a** changent au début de chaque génération de signature selon les formules :
 ```python3
 self.a = (self.a + self.d) % self.q
 self.k = (self.a * self.k + self.b) % self.q
@@ -145,6 +145,6 @@ Voici la meilleur equation que l'on puisse obtenir, encore faut il la resoudre !
 Google nous parle de ***quadratic congruence***  
 Et l'on peut trouver un solver python facilement sur [github](https://github.com/panoti/CH_QuadraticCongruenceSolver)
 
-On l'appelle pour trouver **sk**, et on affiche **flag**
+2 solutions a cette equation : L'une d'elle permet de trouver **sk** et d'afficher **flag**
 
 >404CTF{N_0ub1ie_j4m415_C3lu1_qu1_cr017_5@v0ir_n'4ppr3nd_plu5.}
